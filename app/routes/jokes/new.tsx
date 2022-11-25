@@ -65,6 +65,7 @@ export default function NewJokeRoute() {
   return (
     <div>
       <p>Add your own hilarious joke</p>
+      {/*importante que sea metodo post*/}
       <form method="post">
         <div>
           <label>
