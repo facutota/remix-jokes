@@ -10,7 +10,7 @@ import {
 } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { login } from "~/utils/session.server";
+import { login, createUserSession } from "~/utils/session.server";
 
 import stylesUrl from "~/styles/login.css";
 
@@ -52,8 +52,8 @@ type ActionData = {
   };
 };
 
-const badRequest = (data: ActionData) =>
-  json(data, { status: 400 });
+  const badRequest = (data: ActionData) =>
+    json(data, { status: 400 });
 
 export const action: ActionFunction = async ({
   request,
@@ -94,10 +94,7 @@ export const action: ActionFunction = async ({
           formError: `Username/Password combination is incorrect`,
         });
       }
-      return badRequest({
-        fields,
-        formError: "Not implemented",
-      });
+      return createUserSession(user.id, redirectTo);
     }
     case "register": {
       const userExists = await db.user.findFirst({
