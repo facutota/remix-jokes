@@ -10,7 +10,7 @@ import {
 } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { login, createUserSession } from "~/utils/session.server";
+import { login, createUserSession, register } from "~/utils/session.server";
 
 import stylesUrl from "~/styles/login.css";
 
@@ -107,11 +107,15 @@ export const action: ActionFunction = async ({
         });
       }
       // create the user
+      const user = await register({ username, password});
+      if (!user){
+        return badRequest({
+          fields,
+          formError: "Algo anda mal para crear el usuario",
+        });
+      }
       // create their session and redirect to /jokes
-      return badRequest({
-        fields,
-        formError: "Not implemented",
-      });
+      return createUserSession(user.id, redirectTo);
     }
     default: {
       return badRequest({
